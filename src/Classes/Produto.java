@@ -6,27 +6,27 @@
 package Classes;
 
 /**
- * 19-05-2014
- * @author barbosa
+ *
+ * @author Tiago Cunha
  */
-public class Cliente {
+public class Produto {
     private String codigo;
     
     //Construtores
     //Construtor vazio
-    public Cliente() {
+    public Produto() {
         this.codigo = "";
     }
     
     //Construtor por parametros
 
-    public Cliente(String codigo) {
+    public Produto(String codigo) {
         this.codigo = codigo;
     }
     
     //Construtor por copia
-    public Cliente(Cliente cliente){
-        this.codigo = cliente.getCodigo();
+    public Produto(Produto produto){
+        this.codigo = produto.getCodigo();
     }
     
     //Metodos
@@ -47,14 +47,14 @@ public class Cliente {
     public boolean equals(Object obj) {
       if(this == obj) return true; 
       if((obj == null) || (this.getClass() != obj.getClass())) return false;
-      Cliente c = (Cliente) obj;
+      Produto c = (Produto) obj;
       return this.codigo.equals(c.getCodigo()); 
     }
     
     //Clone
     
-    public Cliente clone(){
-         return new Cliente(this);
+    public Produto clone(){
+         return new Produto(this);
      } 
     
 }
