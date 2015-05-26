@@ -13,7 +13,7 @@ public class Compra {
     private double preco;
     private String modo;
     private int quantidade;
-    private String cliente;
+    private String produto;
     
     //Construtores
     //Construtor vazio
@@ -21,15 +21,15 @@ public class Compra {
         this.preco = 0;
         this.modo = "";
         this.quantidade = 0;
-        this.cliente = "";
+        this.produto = "";
     }
 
     //Construtor por parametros
-    public Compra(double preco, String modo, int quantidade, String cliente) {
+    public Compra(double preco, String modo, int quantidade, String produto) {
         this.preco = preco;
         this.modo = modo;
         this.quantidade = quantidade;
-        this.cliente = cliente;
+        this.produto = produto;
     }
     
     //Construtor por copia
@@ -37,7 +37,7 @@ public class Compra {
         this.preco = compra.getPreco();
         this.modo = compra.getModo();
         this.quantidade = compra.getQuantidade();
-        this.cliente = compra.getCliente();
+        this.produto = compra.getProduto();
     }
 
     
@@ -51,7 +51,7 @@ public class Compra {
 
     public int getQuantidade() {return quantidade;}
     
-    public String getCliente() {return cliente;}
+    public String getProduto() {return produto;}
 
     public void setModo(String modo) {this.modo = modo;}
 
@@ -59,13 +59,13 @@ public class Compra {
 
     public void setQuantidade(int quantidade) {this.quantidade = quantidade;}
     
-    public void setCliente(String cliente){this.cliente = cliente;}
+    public void setProduto(String produto){this.produto = produto;}
     
     
     //Tostring
 
     public String toString(){
-        return "Cliente"  + this.cliente + ", Preço: " + this.preco + ", Quantidade: " + this.quantidade + 
+        return "Produto"  + this.produto + ", Preço: " + this.preco + ", Quantidade: " + this.quantidade + 
                     ", Modo: " + this.modo;
     }
     

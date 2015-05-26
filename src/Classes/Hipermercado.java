@@ -11,6 +11,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.logging.Level;
@@ -74,14 +75,43 @@ public class Hipermercado implements Serializable {
         try {
             BufferedReader br = new BufferedReader(new FileReader("src/Ficheiros/Compras.txt"));
             String linha;
-            String[] array;
+            String[] novo;
+            Compra compra;
+            Contabilidade contas;
+            int quant=0,total = 0;
+            
             
             linha = br.readLine();
             while(linha != null) {
                 //Preencher compra e contabilidade
-                array = linha.split(" ");
+                novo = linha.split(" ");
+                int mes = Integer.parseInt(novo[5]);
+                double preco = Double.parseDouble(novo[1]);
+                int quantidade = Integer.parseInt(novo[2]);
+                double faturado = preco * quantidade;
                 
-                //this.compras.add((novo[5]-1),);
+                compra = new Compra(preco, novo[3], quantidade,novo[0]);
+                this.compras.get(mes-1).put(novo[4],compra);    
+                
+                if(this.contabilidade.get(mes-1).containsKey(novo[0]) && this.contabilidade.get(mes-1).get(novo[0]).getModo().equals(novo[3])){
+                    Set<String> u = new TreeSet<String>();
+                    
+                    int q = this.contabilidade.get(mes-1).get(novo[0]).getQuantidade();
+                    int n = this.contabilidade.get(mes-1).get(novo[0]).getNcompras();
+                    double f = this.contabilidade.get(mes-1).get(novo[0]).getFaturado();
+                    u = this.contabilidade.get(mes-1).get(novo[0]).getUtilizador();
+                    u.add(novo[4]);
+                    
+                    this.contabilidade.get(mes-1).get(novo[0]).setQuantidade(q+quantidade);
+                    this.contabilidade.get(mes-1).get(novo[0]).setNcompras(n+1);
+                    this.contabilidade.get(mes-1).get(novo[0]).setFaturado(f + faturado);
+                    this.contabilidade.get(mes-1).get(novo[0]).setUtilizador(u);
+                }else{
+                    contas = new Contabilidade(quantidade, 1, faturado,novo[3],novo[4]);
+                    this.contabilidade.get(mes-1).put(novo[0],contas);
+                }
+                
+                
             }
         } catch (FileNotFoundException ex) {
             Logger.getLogger(Hipermercado.class.getName()).log(Level.SEVERE, null, ex);
