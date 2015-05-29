@@ -29,7 +29,7 @@ public class Hipermercado implements Serializable {
     private final ArrayList<TreeMap<String,Contabilidade>> contabilidade;//Produto
     
     
-    /**
+    /** 
      * Construtor vazio
      */
     public Hipermercado() {
@@ -41,7 +41,7 @@ public class Hipermercado implements Serializable {
     
     public boolean lerClientes(String fich) throws IOException {
         try {
-            BufferedReader br = new BufferedReader(new FileReader("src/Ficheiros/FichClientes.txt"));
+            BufferedReader br = new BufferedReader(new FileReader(fich));
             String linha;
             
             linha = br.readLine();
@@ -57,7 +57,7 @@ public class Hipermercado implements Serializable {
     
     public boolean lerProdutos(String fich) throws IOException {
         try {
-            BufferedReader br = new BufferedReader(new FileReader("src/Ficheiros/FichProdutos.txt"));
+            BufferedReader br = new BufferedReader(new FileReader(fich));
             String produto;
             
             produto = br.readLine();
@@ -73,7 +73,7 @@ public class Hipermercado implements Serializable {
     
     public boolean lerCompras(String fich) throws IOException {
         try {
-            BufferedReader br = new BufferedReader(new FileReader("src/Ficheiros/Compras.txt"));
+            BufferedReader br = new BufferedReader(new FileReader(fich));
             String linha;
             String[] novo;
             Compra compra;
