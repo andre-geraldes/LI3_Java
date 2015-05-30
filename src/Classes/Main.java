@@ -35,7 +35,7 @@ public class Main {
             Menus ler = new Menus();
             
             op = input.nextInt();
-            
+   
             switch(op){
                 case 1 :
                     // menu lerFicheiro

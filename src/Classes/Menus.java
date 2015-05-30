@@ -18,6 +18,9 @@ import java.util.Scanner;
  * @author Tiago Cunha
  */
 public class Menus {
+    public Menus(){
+    }
+    
     public void menuLerFicheiro(Hipermercado hiper) throws IOException{
         int op = 1;
         String file;
@@ -33,9 +36,9 @@ public class Menus {
 
             System.out.println("\f");
             System.out.println("Ler ficheiros com:");
-            System.out.println("1 - Compra.txt");
-            System.out.println("2 - Compra1.txt");
-            System.out.println("3 - Compra3.txt");
+            System.out.println("1 - Compras.txt");
+            System.out.println("2 - Compras1.txt");
+            System.out.println("3 - Compras3.txt");
             System.out.println("0 - Voltar");
             
             
@@ -43,17 +46,17 @@ public class Menus {
             
             switch(op){
                 case 1 :
-                    hiper.lerCompras("src/Ficheiros/Compra.txt");
+                    hiper.lerCompras("src/Ficheiros/Compras.txt");
                     op = 0;
                     break;
                  
                 case 2 :
-                    hiper.lerCompras("src/Ficheiros/Compra1.txt");
+                    hiper.lerCompras("src/Ficheiros/Compras1.txt");
                     op = 0;
                     break;
                 
                 case 3 :
-                    hiper.lerCompras("src/Ficheiros/Compra3.txt");
+                    hiper.lerCompras("src/Ficheiros/Compras3.txt");
                     op = 0;
                     break;    
                 case 0 :

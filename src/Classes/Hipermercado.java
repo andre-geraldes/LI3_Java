@@ -47,6 +47,7 @@ public class Hipermercado implements Serializable {
             linha = br.readLine();
             while(linha != null) {
                 this.catalogoClientes.add(linha);
+                linha = br.readLine();
             }
         } catch (FileNotFoundException ex) {
             Logger.getLogger(Hipermercado.class.getName()).log(Level.SEVERE, null, ex);
@@ -63,6 +64,7 @@ public class Hipermercado implements Serializable {
             produto = br.readLine();
             while(produto != null) {
                 this.catalogoProdutos.add(produto);
+                produto = br.readLine();
             }
         } catch (FileNotFoundException ex) {
             Logger.getLogger(Hipermercado.class.getName()).log(Level.SEVERE, null, ex);
@@ -111,7 +113,7 @@ public class Hipermercado implements Serializable {
                     this.contabilidade.get(mes-1).put(novo[0],contas);
                 }
                 
-                
+                linha = br.readLine();
             }
         } catch (FileNotFoundException ex) {
             Logger.getLogger(Hipermercado.class.getName()).log(Level.SEVERE, null, ex);
