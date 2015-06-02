@@ -7,6 +7,8 @@ package Classes;
 
 import java.io.IOException;
 import java.util.Scanner;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  *
@@ -17,7 +19,7 @@ public class Main {
         int op = 1;
         
         Hipermercado hiper = new Hipermercado();
-        
+        Menus ler = new Menus();
         
         Scanner input = new Scanner(System.in);   
               
@@ -25,15 +27,13 @@ public class Main {
             // prints do menu
             System.out.println("\f");
             System.out.println("Escolha uma opção:");
-            System.out.println("1 - Ler ficheiro ...");
+            System.out.println("1 - Ler ficheiros ...");
             System.out.println("2 - Gravar dados ...");
             System.out.println("3 - Carregar dados ...");
             System.out.println("4 - Consultas estatisticas ...");
             System.out.println("5 - Consultas interactivas...");
             System.out.println("0 - Terminar");
-            
-            Menus ler = new Menus();
-            
+                                    
             op = input.nextInt();
    
             switch(op){
@@ -49,18 +49,18 @@ public class Main {
                 
                 case 3 :
                     // menu carregarDados
-                        hiper = ler.menuCarregarDados(hiper);
+                    hiper = ler.menuCarregarDados(hiper);
                         
                     break;
                 
                 case 4 :
                     // menu consultasEstatisticas
-                    //menuConsultasEstatisticas(rdaut);
+                    ler.menuConsultasEstatisticas(hiper);
                     break;
                     
                 case 5 :
-                    // menu consultasPorAno
-                    //menuConsultasPorAno(rdaut);
+                    // menu consultasInterativas
+                    ler.menuConsultaInterativas(hiper);
                     break;
                 
                 case 0 :
@@ -77,4 +77,7 @@ public class Main {
         
         System.out.println("Aplicação terminou!");
     }
+
+    
+    
 }

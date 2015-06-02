@@ -17,7 +17,7 @@ public class Contabilidade {
     private int ncompras;
     private double faturado;
     private String modo;
-    private Set<String> utilizador;
+    private TreeSet<String> utilizador;
 
 
 //Construtores
@@ -31,13 +31,11 @@ public class Contabilidade {
     }
 
     //Construtor por parametros
-  
-    public Contabilidade(int quantidade, int ncompras, double faturado,String modo, String utilizador) {
+    public Contabilidade(int quantidade, int ncompras, double faturado,String modo) {
         this.quantidade = quantidade;
         this.ncompras = ncompras;
         this.faturado = faturado;
         this.modo = modo;
-        this.utilizador.add(utilizador);
     }
     
       
@@ -62,7 +60,7 @@ public class Contabilidade {
     
     public String getModo() {return modo;}
 
-    public Set<String> getUtilizador() {return utilizador;}
+    public TreeSet<String> getUtilizador() {return utilizador;}
 
     public void setFaturado(double faturado) {this.faturado = faturado;}
 
@@ -72,8 +70,12 @@ public class Contabilidade {
     
     public void setModo(String modo) {this.modo = modo;}
 
-    public void setUtilizador(Set<String> utilizadorN) {this.utilizador = utilizadorN;}
+    public void setUtilizador(TreeSet<String> utilizadorN) {this.utilizador = utilizadorN;}
        
+    
+    public void addUtilizador(String u){
+        this.utilizador.add(u);
+    }
     
     //Tostring
 
@@ -91,7 +93,7 @@ public class Contabilidade {
         sb.append(this.modo).append("\n");
         
         for(String nome : utilizador){
-            sb.append("Utilizador, modo normal: ");
+            sb.append("Utilizador: ");
             sb.append(nome).append("\n");
         }
         
