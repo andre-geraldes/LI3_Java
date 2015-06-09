@@ -20,6 +20,7 @@ import java.util.InputMismatchException;
 public class Input {
 /**
 * M�todos de Classe
+     * @return 
 */
  
  public static String lerString() {

@@ -11,6 +11,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import static java.lang.System.out;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 /**
@@ -47,10 +49,7 @@ public class Menus {
         ficheiroClientes = "src/Ficheiros/FichClientes.txt";
         ficheiroProdutos = "src/Ficheiros/FichProdutos.txt";
         
-        Crono.start();
         
-        hiper.lerClientes(ficheiroClientes);
-        hiper.lerProdutos(ficheiroProdutos);
         
         
         while(op != 0){
@@ -67,6 +66,10 @@ public class Menus {
             switch(op){
                 case 1 :
                     ficheiroCompras = "src/Ficheiros/Compras.txt";
+                    Crono.start();
+        
+                    hiper.lerClientes(ficheiroClientes);
+                    hiper.lerProdutos(ficheiroProdutos);
                     hiper.lerCompras(ficheiroCompras);
                     Crono.stop();
                     op = 0;
@@ -74,6 +77,10 @@ public class Menus {
                  
                 case 2 :
                     ficheiroCompras = "src/Ficheiros/Compras1.txt";
+                    Crono.start();
+        
+                    hiper.lerClientes(ficheiroClientes);
+                    hiper.lerProdutos(ficheiroProdutos);
                     hiper.lerCompras(ficheiroCompras);
                     Crono.stop();
                     op = 0;
@@ -81,6 +88,10 @@ public class Menus {
                 
                 case 3 :
                     ficheiroCompras = "src/Ficheiros/Compras3.txt";
+                    Crono.start();
+        
+                    hiper.lerClientes(ficheiroClientes);
+                    hiper.lerProdutos(ficheiroProdutos);
                     hiper.lerCompras(ficheiroCompras);
                     Crono.stop();
                     op = 0;
@@ -268,7 +279,7 @@ public class Menus {
             op = input.nextInt();
             
             switch(op){
-                case 1 :
+                case 1 :    
                     consultaUltimoFicheiro(hiper);
                     break;
                  
@@ -297,12 +308,12 @@ public class Menus {
         System.out.println("Nome do ficheiro: ");
         System.out.println("Clientes: " + indicaFich(ficheiroClientes) + "  Produtos: " + indicaFich(ficheiroProdutos) + "  Compras: " + indicaFich(ficheiroCompras));
         System.out.println("Número total de produtos: " + hiper.catalogoProdutos.size());
-        System.out.println("Diferentes produtos comprados: " + hiper.produtosCompradosDif());
-        System.out.println("Total não comprados: " + (hiper.catalogoProdutos.size()- hiper.produtosCompradosDif()));
+        System.out.println("Diferentes produtos comprados: " + hiper.produtosCompradosDif().size());
+        System.out.println("Total não comprados: " + (hiper.catalogoProdutos.size()- hiper.produtosCompradosDif().size()));
         System.out.println("Número total de clientes: " + hiper.catalogoClientes.size() );
         System.out.println("Total clientes que realizaram compras: " + hiper.clientesCompraram());
         System.out.println("Total de clientes que nada compraram: " + (hiper.catalogoClientes.size() - hiper.clientesCompraram()));
-        System.out.println("Total de compras de valor total igual a 0: " + hiper.valorSuperior());
+        System.out.println("Total de compras de valor total igual a 0: " + hiper.valorIgual());
         System.out.println("Faturação total: " + hiper.faturacaoTotal());
         
         Crono.stop();
@@ -313,10 +324,8 @@ public class Menus {
     }
     
     private static void consultaAtualFicheiro(Hipermercado hiper){
-        int i =0;
-        int[] novoI;
-        double[] novoD;
-        String[] meses = {"Janeiro", "Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Novembro","Dezembro"};
+        int i;
+        String[] meses = {"Janeiro", "Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"};
         
         Crono.start();
         
@@ -325,23 +334,32 @@ public class Menus {
         System.out.println("Número total de compras por mês:");
            
             for(i = 0;i < 12 ;i++){
-             System.out.println(meses[i] + ": "+ novoI[i] + ".");
+                int total = 0;
+                total = hiper.totalComprasMes()[i];
+                System.out.println(meses[i] + ": " + total);
             }
+        System.out.println();    
         System.out.println("Facturação total por mês: ");
             for(i = 0;i < 12 ;i++){
-                novoD = new double[12];
-                novoD = hiper.totalFaturacaoMes();
-             System.out.println(meses[i] + ": "+ novoD[i] + ".");
-            }/*
-            
+                double total = 0;
+                total = hiper.totalFaturacaoMes()[i];
+                System.out.printf(meses[i]);
+                System.out.printf(": %.3f",total);
+                System.out.println();
+            }
+        System.out.println();
+           
         System.out.println("Facturação total: " + hiper.faturacaoTotal());
         System.out.println();
         System.out.println("Número de distintos clientes que compraram em cada mês: ");
-        hiper.totalClientDif();
+            for(i = 0;i < 12 ;i++){
+                int total = 0;
+                total = hiper.totalClientDif()[i];
+                System.out.println(meses[i] + ": " + total);
+            }
         System.out.println();
         System.out.println("Total de registos de compras inválidos: " + hiper.linhasInvalidas);
         System.out.println();
-                */
                 
         Crono.stop();
         
@@ -353,6 +371,7 @@ public class Menus {
     public void menuConsultaInterativas(Hipermercado hiper) {
         int op = 1;
         Scanner input = new Scanner(System.in);
+        String[] meses = {"Janeiro", "Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"};
         
         while(op != 0){
 
@@ -381,24 +400,145 @@ public class Menus {
             
             switch(op){
                 case 1 :
+                    Crono.start();
+                    System.out.println("Códigos dos produtos nunca comprados: ");
+                    for(String s : hiper.querie1()){
+                        System.out.println(s);
+                    }
+                    System.out.println("Total de produtos nunca comprados: " + hiper.querie1().size());
+                    System.out.println("Tamanho do catalogo produtos, só para comparar: " + hiper.catalogoProdutos.size());
+                    Crono.stop();
+                    System.out.println("Tempo: " + Crono.print() + "segs.\n");
                     break;
                  
                 case 2 :
+                    System.out.println("Códigos dos clientes que nunca compraram: ");
+                    for(String s : hiper.querie2()){
+                        System.out.println(s);
+                    }
+                    System.out.println("Total de clientes que nunca compraram: " + hiper.querie2().size());
+                    System.out.println("Total clientes, para comparar: " + hiper.catalogoClientes.size());
+                    Crono.stop();
+                    System.out.println("Tempo: " + Crono.print() + "segs.\n");
                     break;
                 
                 case 3 :
+                    System.out.println("Insira um mês(inteiro): ");
+                   
+                    int i = input.nextInt();
+                    
+                    while(i < 1 || i > 12) {
+                        System.out.println("Mês inválido! ");
+                        System.out.println("Insira novo valor: ");
+                        i = input.nextInt();
+                    }
+                    Crono.start();
+                    
+                    //fica (i-1), porque o array tem tamanho 12
+                    System.out.println("Total de compras neste mês: " + hiper.querie3NTCompras(i-1));
+                    System.out.println("Clientes distintos neste mês: " + hiper.querie3NTDistintos(i-1));
+                    Crono.stop();
+                    System.out.println("Tempo: " + Crono.print() + "segs.\n");
                     break;
                     
                 case 4 :
+                    System.out.println("Insira um  código de um cliente: ");
+                    String cliente;
+                    cliente = input.next();
+                    
+                    while(!hiper.catalogoClientes.contains(cliente)) {
+                        System.out.println("Cliente inválido! ");
+                        System.out.println("Insira novo código: ");
+                        cliente = input.next();
+                    }
+                    Crono.start();
+                    
+                    System.out.println("Quantidade de compras efectuadas em: ");
+                    for(int j = 0;j < 12;j++){
+                        System.out.println(meses[j] + ": " + hiper.clienteCompraMes(cliente)[j]);
+                    }
+                    System.out.println();
+                    System.out.println("Produtos diferentes comprados: ");
+                    for(int j = 0;j < 12;j++){
+                        System.out.println(meses[j] + ": " + hiper.clienteCompraDistMes(cliente)[j]);
+                    }
+                    System.out.println();
+                    System.out.println("Quanto gastou por mês: ");
+                    for(int j = 0;j < 12;j++){
+                        System.out.println(meses[j] + ": " + hiper.clienteGastaMes(cliente)[j]);
+                    }
+                    System.out.println();
+                    System.out.println("Total anual faturado: " + hiper.clienteTotalFaturado(cliente));
+                    Crono.stop();
+                    System.out.println("Tempo: " + Crono.print() + "segs.\n");
                     break;
                     
                 case 5 :
+                    System.out.println("Insira um código de um produto: ");
+                    String produto;
+                    produto = input.next();
+                    
+                    while(!hiper.catalogoProdutos.contains(produto)) {
+                        System.out.println("Cliente inválido! ");
+                        System.out.println("Insira novo código: ");
+                        cliente = input.next();
+                    }
+                    Crono.start();
+                    
+                    System.out.println("Quantidade de compras efectuadas em: ");
+                    for(int j = 0;j < 12;j++){
+                        System.out.println(meses[j] + ": " + hiper.produtoCompraMes(produto)[j]);
+                    }
+                    System.out.println();
+                    System.out.println("Produtos diferentes comprados: ");
+                    for(int j = 0;j < 12;j++){
+                        System.out.println(meses[j] + ": " + hiper.produtoClienteDifMes(produto)[j]);
+                    }
+                    System.out.println();
+                    System.out.println("Total anual faturado: " + hiper.produtoTotalFaturado(produto));
+                    Crono.stop();
+                    System.out.println("Tempo: " + Crono.print() + "segs.\n");
                     break;
                 
                 case 6 :
+                    System.out.println("Insira um código de um produto: ");
+                    produto = input.next();
+                    
+                    while(!hiper.catalogoProdutos.contains(produto)) {
+                        System.out.println("Cliente inválido! ");
+                        System.out.println("Insira novo código: ");
+                        cliente = input.next();
+                    }
+                    Crono.start();
+                    
+                    System.out.println("Quantidade de compras em modo normal: ");
+                    for(int j = 0;j < 12;j++){
+                        System.out.println(meses[j] + ": " + hiper.compradoNP(produto,"N")[j]);
+                    }
+                    System.out.println();
+                    System.out.println("Faturado em modo promocional: " + hiper.faturadoNP(produto,"N"));
+                    System.out.println();
+                    System.out.println("Quantidade de compras em modo promocional: ");
+                    for(int j = 0;j < 12;j++){
+                        System.out.println(meses[j] + ": " + hiper.compradoNP(produto,"P")[j]);
+                    }
+                    System.out.println();
+                    System.out.println("Faturado em modo promocional: " + hiper.faturadoNP(produto,"P"));
+                    Crono.stop();
+                    System.out.println("Tempo: " + Crono.print() + "segs.\n");
                     break;
                 
-                case 7 :
+                case 7 :/*
+                    System.out.println("Insira um  código de um cliente: ");
+                    cliente = input.next();
+                    
+                    while(!hiper.catalogoClientes.contains(cliente)) {
+                        System.out.println("Cliente inválido! ");
+                        System.out.println("Insira novo código: ");
+                        cliente = input.next();
+                    }
+                    */
+                    
                     break;
                 
                 case 8 :

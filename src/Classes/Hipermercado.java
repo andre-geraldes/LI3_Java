@@ -11,9 +11,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Set;
-import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -26,8 +26,8 @@ import java.util.logging.Logger;
 public class Hipermercado implements Serializable {
     public final TreeSet<String> catalogoClientes;
     public final TreeSet<String> catalogoProdutos;
-    public final ArrayList<TreeMap<String,Compra>> compras;//Cliente
-    public final ArrayList<TreeMap<String,Contabilidade>> contabilidade;//Produto
+    public final ArrayList<HashMap<String,ListaCompras>> compras;//Cliente
+    public final ArrayList<HashMap<String,Contabilidade>> contabilidade;//Produto
     public int linhasInvalidas;
     
     /** 
@@ -37,7 +37,7 @@ public class Hipermercado implements Serializable {
     public Hipermercado() {
         this.catalogoClientes = new TreeSet<>();
         this.catalogoProdutos = new TreeSet<>();
-        this.compras = new ArrayList<>();
+        this.compras = new ArrayList<>(12);
         this.contabilidade = new ArrayList<>(12);
     }
     
@@ -76,19 +76,21 @@ public class Hipermercado implements Serializable {
     }
     
     public boolean lerCompras(String fich) throws IOException {
+        int total = 0;
         try {
             BufferedReader br = new BufferedReader(new FileReader(fich));
+            
             String linha;
             String[] novo;
             Compra compra;
             Contabilidade contas;
             
             for(int i = 0; i < 12; i++){
-                this.compras.add(i,new TreeMap<String,Compra>());
+                this.compras.add(i,new HashMap<String,ListaCompras>());
             }
             
             for(int i = 0; i < 12; i++){
-                this.contabilidade.add(i,new TreeMap<String,Contabilidade>());
+                this.contabilidade.add(i,new HashMap<String,Contabilidade>());
             }
             
             linha = br.readLine();
@@ -101,35 +103,44 @@ public class Hipermercado implements Serializable {
                 double faturado = preco * quantidade;
                 
                 if(linha_valida(novo[0],preco,quantidade,novo[3],novo[4],mes)){
-                
-                    compra = new Compra(preco, novo[3], quantidade,novo[0]);
-                    this.compras.get(mes-1).put(novo[4],compra);
-
                     
-                    if(this.contabilidade.get(mes-1).containsKey(novo[0]) && this.contabilidade.get(mes-1).get(novo[0]).getModo().equals(novo[3])){
-                        TreeSet<String> u = new TreeSet<>();
-
-                        int q = this.contabilidade.get(mes-1).get(novo[0]).getQuantidade();
-                        int n = this.contabilidade.get(mes-1).get(novo[0]).getNcompras();
-                        double f = this.contabilidade.get(mes-1).get(novo[0]).getFaturado();
-                        u = this.contabilidade.get(mes-1).get(novo[0]).getUtilizador();
-                        u.add(novo[4]);
-
-                        this.contabilidade.get(mes-1).get(novo[0]).setQuantidade(q+quantidade);
-                        this.contabilidade.get(mes-1).get(novo[0]).setNcompras(n+1);
-                        this.contabilidade.get(mes-1).get(novo[0]).setFaturado(f + faturado);
-                        this.contabilidade.get(mes-1).get(novo[0]).setUtilizador(u);
+                    compra = new Compra(preco, novo[3], quantidade,novo[0]);
+                    
+                    if(this.compras.get(mes-1).containsKey(novo[4])){
+                        this.compras.get(mes-1).get(novo[4]).addCompra(compra);
                     }else{
                         
-                        contas = new Contabilidade();
-                        contas.setFaturado(faturado);
-                        contas.setModo(novo[3]);
-                        contas.setNcompras(1);
-                        contas.setQuantidade(quantidade);
-                        contas.addUtilizador(novo[4]);
-                        this.contabilidade.get(mes-1).put(novo[0],contas);
+                        ListaCompras lista = new ListaCompras();
+                        lista.addCompra(compra);
+                        this.compras.get(mes-1).put(novo[4],lista);
                     }
-                }else {this.linhasInvalidas++;}
+                    
+                if(this.contabilidade.get(mes-1).containsKey(novo[0]) && this.contabilidade.get(mes-1).get(novo[0]).getModo().equals(novo[3])){
+                    TreeSet<String> u = new TreeSet<>();
+
+                    int q = this.contabilidade.get(mes-1).get(novo[0]).getQuantidade();
+                    int n = this.contabilidade.get(mes-1).get(novo[0]).getNcompras();
+                    double f = this.contabilidade.get(mes-1).get(novo[0]).getFaturado();
+                    u = this.contabilidade.get(mes-1).get(novo[0]).getUtilizador();
+                    u.add(novo[4]);
+
+                    this.contabilidade.get(mes-1).get(novo[0]).setQuantidade(q+quantidade);
+                    this.contabilidade.get(mes-1).get(novo[0]).setNcompras(n+1);
+                    this.contabilidade.get(mes-1).get(novo[0]).setFaturado(f + faturado);
+                    this.contabilidade.get(mes-1).get(novo[0]).setUtilizador(u);
+                }else{
+                        
+                    contas = new Contabilidade();
+                    contas.setFaturado(faturado);
+                    contas.setModo(novo[3]);
+                    contas.setNcompras(1);
+                    contas.setQuantidade(quantidade);
+                    contas.addUtilizador(novo[4]);
+                    this.contabilidade.get(mes-1).put(novo[0],contas);
+                    }
+           }else{
+                    this.linhasInvalidas++; 
+                }
                 linha = br.readLine();
             }
         } catch (FileNotFoundException ex) {
@@ -139,7 +150,7 @@ public class Hipermercado implements Serializable {
         return true;
     }
     
-    //Funções para as queries de consulta
+    
     public boolean linha_valida (String prod, double p, int quant, String modo, String cliente,int mes){
 	boolean x = false;
         
@@ -147,22 +158,33 @@ public class Hipermercado implements Serializable {
         
         return x;
     }
-   
-    public int produtosCompradosDif(){
+    
+    /* 
+     * Funções para as queries de consulta
+     */
+
+    //Como o TreeSet não insere repetidos, vai devolver todos os que são diferentes
+    public Set<String> produtosCompradosDif(){
         int i = 0;
         String pal;
         Set<String> novo = new TreeSet<>();
         
         while(i < 12){
-           for(Compra c : this.compras.get(i).values()){
-                pal = c.getProduto();
-                novo.add(pal);
-           }
-           i++;
+           for(ListaCompras c : this.compras.get(i).values()){
+                Iterator<Compra> it = c.getLista().iterator();
+                
+                while(it.hasNext()){
+                    Compra co = it.next();
+                    pal = co.getProduto();
+                    novo.add(pal);
+                }
+            }
+        i++;   
         }        
-        return novo.size();
+        return novo;
     }
-
+    
+       
     public int clientesCompraram(){
         int i = 0;
         
@@ -178,16 +200,22 @@ public class Hipermercado implements Serializable {
         return total.size();
     }
     
-    public int valorSuperior(){
-        int total = 0, i= 0;
+    public int valorIgual(){
+        int total = 0, i = 0;
         double preco = 0;
         
         while(i < 12){
-            for(Compra c : this.compras.get(i).values()){
-                preco = c.getPreco();
-                if(preco == 0 ){
-                    total++;
-                }
+            for(ListaCompras c : this.compras.get(i).values()){
+                
+                Iterator<Compra> it = c.getLista().iterator();
+                
+                while(it.hasNext()){
+                    Compra co = it.next();
+                    preco = co.getPreco();
+                    if(preco == 0 ){
+                        total++;
+                    }
+                }    
             }
             i++;
         }
@@ -208,17 +236,11 @@ public class Hipermercado implements Serializable {
         return total;
     }
     
-    /**
-     *
-     * @return
-     */
     public int[] totalComprasMes(){
         int total, i=0;
         int[] novo = new int[12];
         
         while(i < 12){
-            total = 0;
-     
             total = this.compras.get(i).size();
             novo[i] = total;
             i++;
@@ -250,8 +272,6 @@ public class Hipermercado implements Serializable {
         int[] mes = new int[12];
         
         while(i < 12){
-            
-            total = 0;
             novo = this.compras.get(i).keySet();
             total = novo.size();
             mes[i]=total;
@@ -261,23 +281,224 @@ public class Hipermercado implements Serializable {
         return mes;
     }
     
-    //Queries Interactivas
     
-    public void querie1(){
-        TreeSet<String> novo = new TreeSet<>();
+    
+    /**
+     * Queries Interactivas
+     */
+    
+    
+    //Querie 1, está resolvida em funções em cima
+    /**************************************************************************/
+    public Set<String> querie1(){
         int i = 0;
-        String codigo;
+        Set<String> novo = new TreeSet<>();
+        
+        for(String s : this.catalogoProdutos){
+            while(i < 12){
+                for(ListaCompras c : this.compras.get(i).values()){
+                    Iterator<Compra> it = c.getLista().iterator();
+                
+                    while(it.hasNext()){
+                        Compra co = it.next();
+                        
+                        if(!co.getProduto().equals(s)){
+                            novo.add(s);
+                        }
+                    }
+                }
+                i++;   
+            }
+        }
+        return novo;
+    }
+
+    /**************************************************************************/
+    //Querie 2
+    public Set<String> querie2(){
+        int i = 0;
+        Set<String> novo = new TreeSet<>();
+        Set<String> total = new TreeSet<>();
+        
+          
+        while(i < 12){
+            novo = this.compras.get(i).keySet();
+            
+            for(String s : novo){
+                total.add(s);
+            }
+            i++;
+        }
+        return total;
+    }
+    
+    /**
+     * @param mes
+     * @return 
+     */
+     //Querie 3
+    public int querie3NTCompras(int mes){
+        int tam = 0;
+        for(ListaCompras c : this.compras.get(mes).values()){
+            tam += c.tamLista();
+        }
+        return tam;
+    }
+    
+    public int querie3NTDistintos(int mes){
+        Set<String> novo = new TreeSet<>();
+        
+        novo = this.compras.get(mes).keySet();
+        
+        return novo.size();
+    }
+
+    /**************************************************************************/
+    //Querie 4
+    public int[] clienteCompraMes(String cliente){
+        int[] novo = new int[12];
+        int i = 0;
         
         while(i < 12){
-            for(Compra c : this.compras.get(i).values()){
-                codigo = c.getProduto();
-                
-                if(this.catalogoProdutos.contains(codigo)){
-                    novo.add(codigo);
+            if(this.compras.get(i).containsKey(cliente)){
+                novo[i] = this.compras.get(i).get(cliente).getLista().size();
+            }
+            i++;     
+        }
+        return novo;
+    }
+
+    public int[] clienteCompraDistMes(String cliente){
+        int[] novo = new int[12];
+        int i = 0;
+        String pal;
+        Set<String> aux = new TreeSet<>();
+        
+        while(i < 12){
+            aux.clear();  
+            if(this.compras.get(i).containsKey(cliente)){
+                for(Compra c : this.compras.get(i).get(cliente).getLista()){
+                    pal = c.getProduto();
+                    aux.add(pal);
+                }
+                novo[i] = aux.size();
+            }
+            i++;
+        }
+        return novo;
+    }
+    
+    public double[] clienteGastaMes(String cliente){
+        double[] novo = new double[12];
+        int i = 0,quantidade=0;
+        double preco = 0,total = 0;
+        
+            while(i < 12){
+                total = 0;
+                if(this.compras.get(i).containsKey(cliente)){
+                    for(Compra c : this.compras.get(i).get(cliente).getLista()){
+                        quantidade = c.getQuantidade();
+                        preco = c.getPreco();
+                        total += preco*quantidade;    
+                   }
+                   novo[i] = total; 
+                }
+               i++;
+            }
+        return novo;
+    }
+    
+    public double clienteTotalFaturado(String cliente){
+        double total = 0;
+        for(int i = 0; i < 12; i++){
+            total += clienteGastaMes(cliente)[i];
+        }
+        return total;
+    }
+ 
+    //Querie 5 
+    public int[] produtoCompraMes(String produto){
+        int total = 0,i=0,aux = 0;
+        int[] novo = new int[12];
+        
+        while( i< 12){
+            if(this.contabilidade.get(i).containsKey(produto)){
+                for(Contabilidade c : this.contabilidade.get(i).values()){
+                    aux = c.getNcompras();
+                    total += aux;
+                }
+            }
+            novo[i] = total;
+            i++;
+        }
+        return novo;
+    }
+    
+    public int[] produtoClienteDifMes(String produto){
+        int[] novo = new int[12];
+        int i = 0;
+        Set<String> aux = new TreeSet<>();
+        
+        
+        while(i < 12){
+            if(this.contabilidade.get(i).containsKey(produto)){
+                aux = this.contabilidade.get(i).get(produto).getUtilizador();
+                novo[i] = aux.size();
+            }
+            i++;
+        }
+        return novo;
+    }
+    
+    public double produtoTotalFaturado(String produto){
+        int total = 0,i = 0;
+        while(i < 12){
+            if(this.contabilidade.get(i).containsKey(produto)){
+                for(Contabilidade c : this.contabilidade.get(i).values()){
+                    total += c.getFaturado();
+                }
+            }    
+            i++;
+        }
+        return total;
+    }
+    
+    //Querie 6
+    public int[] compradoNP(String produto, String modo){
+        int[] novo = new int[12];
+        int i = 0, aux;
+        
+        while(i < 12){
+            aux = 0;
+            if(this.contabilidade.get(i).containsKey(produto)){
+                for(Contabilidade c : this.contabilidade.get(i).values()){
+                    if(c.getModo().equals(modo)){
+                        aux = c.getNcompras();
+                    }
+                }
+            }
+            novo[i] = aux;
+            i++;
+        }
+        return novo;
+    }
+    
+    public double faturadoNP(String produto,String modo){
+        int i = 0;
+        double total = 0;
+        
+        while(i < 12){
+            if(this.contabilidade.get(i).containsKey(produto)){
+                for(Contabilidade c : this.contabilidade.get(i).values()){
+                    if(c.getModo().equals(modo)){
+                        total += c.getFaturado();
+                    }
                 }
             }
             i++;
         }
-    
+        return total;
     }
+    
+    //Querie 7
 }

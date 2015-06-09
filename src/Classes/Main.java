@@ -7,15 +7,15 @@ package Classes;
 
 import java.io.IOException;
 import java.util.Scanner;
-import java.util.Set;
-import java.util.TreeSet;
 
 /**
  *
  * @author Tiago Cunha
  */
 public class Main {
+        //private static Input input;
     public static void main(String[] args) throws IOException{
+        //input = new Input();
         int op = 1;
         
         Hipermercado hiper = new Hipermercado();
@@ -68,7 +68,6 @@ public class Main {
                     break;
                 default :
                     System.out.println(" Opção ou valor inválido, prima Enter e volte a introduzir!");
-                    input.nextLine();
                     input.nextLine();
                     System.out.print("\f");
                     
