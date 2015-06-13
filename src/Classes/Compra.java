@@ -8,7 +8,7 @@ package Classes;
 import java.io.Serializable;
 
 /**
- * 19-05-2014
+ * Classe compra 19-05-2014
  * @author barbosa
  */
 public class Compra implements Serializable {

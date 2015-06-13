@@ -21,7 +21,7 @@ import java.util.Scanner;
 import java.util.Set;
 
 /**
- *
+ * Classe de menus
  * @author Tiago Cunha
  */
 public class Menus {

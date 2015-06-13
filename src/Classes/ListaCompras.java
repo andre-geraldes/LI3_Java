@@ -9,7 +9,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
- *
+ * Classe lista de compras dos clientes
  * @author Tiago Cunha
  */
 public class ListaCompras implements Serializable {

@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.Scanner;
 
 /**
- *
+ * Classe main
  * @author Tiago Cunha
  */
 public class Main {
@@ -55,6 +55,7 @@ public class Main {
                 case 3 :
                     // menu carregarDados
                     hiper.clean();
+                    leu = true;
                     hiper = ler.menuCarregarDados(hiper);
                         
                     break;

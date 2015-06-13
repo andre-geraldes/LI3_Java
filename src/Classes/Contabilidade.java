@@ -9,7 +9,7 @@ import java.io.Serializable;
 import java.util.TreeSet;
 
 /**
- *
+ * Classe contabilidade
  * @author Tiago Cunha
  */
 public class Contabilidade implements Serializable {

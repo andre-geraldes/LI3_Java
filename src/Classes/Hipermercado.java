@@ -24,7 +24,7 @@ import java.util.logging.Logger;
 
 /**
  * Classe hipermercado 19-05-2014
- *
+ * Classe agregadora
  * @author barbosa
  */
 public class Hipermercado implements Serializable {
@@ -57,7 +57,11 @@ public class Hipermercado implements Serializable {
             this.contabilidade.add(i, new HashMap<String, Contabilidade>());
         }
     }
-
+    
+    /**
+     * Gets e sets
+     * @return 
+     */
     public String getFicheiroClientes() {
         return this.ficheiroClientes;
     }
@@ -121,7 +125,12 @@ public class Hipermercado implements Serializable {
     public void setLinhasInvalidas(int linhasInvalidas) {
         this.linhasInvalidas = linhasInvalidas;
     }
-
+    
+    /**
+     * Parsing do ficheiro de clientes
+     * @return
+     * @throws IOException 
+     */
     public boolean lerClientes() throws IOException {
         try {
             BufferedReader br = new BufferedReader(new FileReader(this.ficheiroClientes));
@@ -138,7 +147,12 @@ public class Hipermercado implements Serializable {
         }
         return true;
     }
-
+    
+    /**
+     * Parsing do ficheiro produtos
+     * @return
+     * @throws IOException 
+     */
     public boolean lerProdutos() throws IOException {
         try {
             BufferedReader br = new BufferedReader(new FileReader(this.ficheiroProdutos));
@@ -155,7 +169,12 @@ public class Hipermercado implements Serializable {
         }
         return true;
     }
-
+    
+    /**
+     * Lê ficheiro de compras
+     * @return
+     * @throws IOException 
+     */
     public boolean lerCompras() throws IOException {
         int total = 0;
         try {
@@ -230,7 +249,17 @@ public class Hipermercado implements Serializable {
         }
         return true;
     }
-
+    
+    /**
+     * verifica se uma linha é válida
+     * @param prod
+     * @param p
+     * @param quant
+     * @param modo
+     * @param cliente
+     * @param mes
+     * @return 
+     */
     public boolean linha_valida(String prod, double p, int quant, String modo, String cliente, int mes) {
         boolean x = false;
 
@@ -243,8 +272,8 @@ public class Hipermercado implements Serializable {
 
     /* 
      * Funções para as queries de consulta
+     * Calcula quantos produtos diferentes foram comprados
      */
-    //Como o TreeSet não insere repetidos, vai devolver todos os que são diferentes
     public Set<String> produtosCompradosDif() {
         int i = 0;
         String pal;
@@ -264,7 +293,11 @@ public class Hipermercado implements Serializable {
         }
         return novo;
     }
-
+    
+    /**
+     * Calcula quantos clientes compraram
+     * @return 
+     */
     public int clientesCompraram() {
         int i = 0;
 
@@ -278,7 +311,11 @@ public class Hipermercado implements Serializable {
         }
         return total.size();
     }
-
+    
+    /**
+     * calcula o número de compras com preço zero
+     * @return 
+     */
     public int valorIgual() {
         int total = 0, i = 0;
         double preco = 0;
@@ -300,7 +337,12 @@ public class Hipermercado implements Serializable {
         }
         return total;
     }
-
+    
+    
+    /**
+     * calcula o total faturado
+     * @return 
+     */
     public double faturacaoTotal() {
         double total = 0;
         int i = 0;
@@ -313,7 +355,12 @@ public class Hipermercado implements Serializable {
         }
         return total;
     }
-
+    
+    /**
+     * Caclula o número de compras efectuadas num mês
+     * @param i
+     * @return 
+     */
     public int totalComprasMes(int i) {
         int j = 0;
 
@@ -323,25 +370,33 @@ public class Hipermercado implements Serializable {
 
         return j;
     }
-
+    
+    /**
+     * calcula para todos os mesese os total faturado
+     * @return 
+     */
     public double[] totalFaturacaoMes() {
         int i = 0;
-        double mes, separado;
+        double mes,facturado;
         double[] novo = new double[12];
 
         while (i < 12) {
             mes = 0;
 
             for (Contabilidade c : this.contabilidade.get(i).values()) {
-                //separado = c.getFaturado();
-                //mes += separado;
+                facturado = c.getFaturadoN() + c.getFaturadoP();
+                mes += facturado;
             }
             novo[i] = mes;
             i++;
         }
         return novo;
     }
-
+    
+    /**
+     * calcula para cada mês, o número distinto de clientes que compraram
+     * @return 
+     */
     public int[] totalClientDif() {
         int i = 0, total = 0;
         Set<String> novo = new TreeSet<>();
@@ -360,9 +415,9 @@ public class Hipermercado implements Serializable {
     /**
      * Queries Interactivas
      */
-    //Querie 1, está resolvida em funções em cima
+    
     /**
-     * ***********************************************************************
+     * Querie 1, está resolvida em funções em cima
      */
     public Set<String> querie1() {
         int i, h, j;
@@ -386,7 +441,10 @@ public class Hipermercado implements Serializable {
     /**
      * ***********************************************************************
      */
-    //Querie 2
+    /**
+     * Query 2
+     * @return 
+     */
     public Set<String> querie2() {
         int i = 0;
         Set<String> novo = new TreeSet<>();
@@ -437,7 +495,12 @@ public class Hipermercado implements Serializable {
     /**
      * ***********************************************************************
      */
-    //Querie 4
+    /**
+     * Query 4
+     * @param j
+     * @param cliente
+     * @return 
+     */
     public int clienteCompraMes(int j, String cliente) {
         if (this.compras.get(j).containsKey(cliente)) {
             return this.compras.get(j).get(cliente).getLista().size();
@@ -445,7 +508,12 @@ public class Hipermercado implements Serializable {
             return 0;
         }
     }
-
+    
+    /**
+     * Calcula quantas compras um cliente fez em cada mês
+     * @param cliente
+     * @return 
+     */
     public int[] clienteCompraDistMes(String cliente) {
         int[] novo = new int[12];
         int i = 0;
@@ -465,7 +533,12 @@ public class Hipermercado implements Serializable {
         }
         return novo;
     }
-
+    
+    /**
+     * Calcula quanto e que um cliente gastou em cada mês
+     * @param cliente
+     * @return 
+     */
     public double[] clienteGastaMes(String cliente) {
         double[] novo = new double[12];
         int i = 0, quantidade = 0;
@@ -485,7 +558,12 @@ public class Hipermercado implements Serializable {
         }
         return novo;
     }
-
+    
+    /**
+     * Calcula o total faturado de um cliente
+     * @param cliente
+     * @return 
+     */
     public double clienteTotalFaturado(String cliente) {
         double total = 0;
         for (int i = 0; i < 12; i++) {
@@ -494,7 +572,12 @@ public class Hipermercado implements Serializable {
         return total;
     }
 
-    //Querie 5 
+   /**
+    * Query 5
+    * @param i
+    * @param produto
+    * @return 
+    */
     public int produtoCompraMes(int i, String produto) {
         int total = 0;
 
@@ -504,7 +587,13 @@ public class Hipermercado implements Serializable {
 
         return total;
     }
-
+    
+    /**
+     * Calcula quantos clientes diferentes compraram um produto num dado mes
+     * @param i
+     * @param produto
+     * @return 
+     */
     public int produtoClienteDifMes(int i, String produto) {
         Set<String> aux = new TreeSet<>();
 
@@ -514,7 +603,12 @@ public class Hipermercado implements Serializable {
 
         return aux.size();
     }
-
+    
+    /**
+     * Total faturado de um produto
+     * @param produto
+     * @return 
+     */
     public double produtoTotalFaturado(String produto) {
         double total = 0;
         int i = 0;
@@ -527,7 +621,13 @@ public class Hipermercado implements Serializable {
         return total;
     }
 
-    //Querie 6
+    /**
+     * Calcula o total de compras de um produto num mes
+     * @param i
+     * @param produto
+     * @param modo
+     * @return 
+     */
     public int compradoNP(int i, String produto, String modo) {
         int aux = 0;
 
@@ -540,7 +640,13 @@ public class Hipermercado implements Serializable {
         }
         return aux;
     }
-
+    
+    /**
+     * Calcula o total faturado de um produto
+     * @param produto
+     * @param modo
+     * @return 
+     */
     public double faturadoNP(String produto, String modo) {
         double aux = 0;
 
@@ -556,7 +662,11 @@ public class Hipermercado implements Serializable {
         return aux;
     }
 
-    //Querie 7
+    /**
+     * ´Query 7
+     * @param cliente
+     * @return 
+     */
     public Set<String> querie7(String cliente) {
         HashMap<String, Integer> produtos = new HashMap<>();
         ArrayList<String> prod = new ArrayList<>();
@@ -594,7 +704,12 @@ public class Hipermercado implements Serializable {
 
         return novo;
     }
-
+    
+    /**
+     * Parsing para obter quantidade
+     * @param n
+     * @return 
+     */
     public int getQuant(String n) {
         String[] nova;
         nova = n.split(" ");
@@ -603,7 +718,11 @@ public class Hipermercado implements Serializable {
         return Integer.parseInt(nova[0]);
     }
 
-    //Querie 8
+    /**
+     * Query 8
+     * @param npro
+     * @return 
+     */
     public Set<String> querie8(int npro) {
         HashMap<String, Integer> produtos = new HashMap<>();
         ArrayList<String> prod = new ArrayList<>();
@@ -651,7 +770,12 @@ public class Hipermercado implements Serializable {
 
         return novo;
     }
-
+    
+    /**
+     * Parsing para reter o produto de uma string
+     * @param s
+     * @return 
+     */
     public String getProdu(String s) {
         String[] nova;
         nova = s.split(" ");
@@ -659,7 +783,11 @@ public class Hipermercado implements Serializable {
         return nova[0];
     }
 
-    //Querie 9
+    /**
+     * Query 9
+     * @param npro
+     * @return 
+     */
     public Set<String> querie9(int npro) {
         HashMap<String, TreeSet<String>> clientes = new HashMap<>();
         ArrayList<String> prod = new ArrayList<>();
@@ -702,7 +830,12 @@ public class Hipermercado implements Serializable {
         return novo;
     }
 
-    //Querie 10\
+    /**
+     * Query 10
+     * @param produto
+     * @param npro
+     * @return 
+     */
     public Set<String> querie10(String produto, int npro) {
         HashMap<String, Integer> clientes = new HashMap<>();
         HashMap<String, Double> total = new HashMap<>();
@@ -748,7 +881,12 @@ public class Hipermercado implements Serializable {
 
         return novo;
     }
-
+    
+    /**
+     * Parsing de string para reter quantidade
+     * @param n
+     * @return 
+     */
     public int getQuantB(String n) {
         String[] nova;
         nova = n.split(" ");
@@ -756,7 +894,10 @@ public class Hipermercado implements Serializable {
 
         return Integer.parseInt(nova[0]);
     }
-
+    
+    /**
+     * Faz reset às estruturas
+     */
     public void clean(){
         this.catalogoClientes.clear();
         this.catalogoProdutos.clear();
