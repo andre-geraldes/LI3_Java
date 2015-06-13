@@ -79,11 +79,7 @@ public class Main {
                     System.out.print("\f");
                     
             }
-        }
-        
+        }  
         System.out.println("Aplicação terminou!");
     }
-
-    
-    
 }

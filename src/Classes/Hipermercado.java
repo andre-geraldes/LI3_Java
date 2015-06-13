@@ -695,7 +695,7 @@ public class Hipermercado implements Serializable {
             }
         });
 
-        for (int k = 0; k < npro; k++) {
+        for (int k = 0; k < npro && k<novo.size(); k++) {
             novo.add(prod.get(k));
         }
 
