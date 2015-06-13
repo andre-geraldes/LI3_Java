@@ -5,13 +5,14 @@
  */
 package Classes;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  *
  * @author Tiago Cunha
  */
-public class ListaCompras {
+public class ListaCompras implements Serializable {
  
     private ArrayList<Compra> lista;
 
@@ -42,6 +43,35 @@ public class ListaCompras {
         return this.lista.size();
     }
     
+    public boolean containsProdut(String s){
+        boolean t = false;
+        for(Compra c : this.lista){
+            if(c.getProduto().equals(s)) t = true;
+        }
+        
+        return t;
+    }
+    
+    public int vezesComprado(String s){
+        int i, q = 0;
+        for(i = 0; i < this.lista.size(); i++){
+            if(this.lista.get(i).getProduto().equals(s)) q = this.lista.get(i).getQuantidade();
+        }
+        
+        return q;
+    }
+    
+    public double valorGasto(String s){
+        int i;
+        double q = 0;
+        for (i = 0; i < this.lista.size(); i++) {
+            if (this.lista.get(i).getProduto().equals(s)) {
+                q = this.lista.get(i).getPreco() * this.getLista().get(i).getQuantidade();
+            }
+        }
+
+        return q;
+    }
     
     //clone
     @Override

@@ -5,122 +5,102 @@
  */
 package Classes;
 
+import java.io.Serializable;
 import java.util.TreeSet;
 
 /**
  *
  * @author Tiago Cunha
  */
-public class Contabilidade {
-    private int quantidade;
-    private int ncompras;
-    private double faturado;
-    private String modo;
-    private TreeSet<String> utilizador;
+public class Contabilidade implements Serializable {
+    private int quantidadeN;
+    private int ncomprasN;
+    private double faturadoN;
+    private int quantidadeP;
+    private int ncomprasP;
+    private double faturadoP;
+    private TreeSet<String> clientes;
 
-
-//Construtores
-    //Construtor vazio
     public Contabilidade() {
-        this.quantidade = 0;
-        this.ncompras = 0;
-        this.faturado = 0;
-        this.modo = "";
-        this.utilizador = new TreeSet<>();
-    }
-
-    //Construtor por parametros
-    public Contabilidade(int quantidade, int ncompras, double faturado,String modo) {
-        this.quantidade = quantidade;
-        this.ncompras = ncompras;
-        this.faturado = faturado;
-        this.modo = modo;
+        this.quantidadeN = 0;
+        this.ncomprasN = 0;
+        this.faturadoN = 0;
+        this.quantidadeP = 0;
+        this.ncomprasP = 0;
+        this.faturadoP = 0;
+        this.clientes = new TreeSet<>();
     }
     
-      
-    //Construtor por copia
-
-    public Contabilidade(Contabilidade contabilidade){
-        this.quantidade = contabilidade.getQuantidade();
-        this.ncompras = contabilidade.getNcompras();
-        this.faturado = contabilidade.getFaturado();
-        this.modo = contabilidade.getModo();
-        this.utilizador = contabilidade.getUtilizador();
+    public Contabilidade(int quantidadeN, int ncomprasN, double faturadoN, int quantidadeP, int ncomprasP, double faturadoP) {
+        this.quantidadeN = quantidadeN;
+        this.ncomprasN = ncomprasN;
+        this.faturadoN = faturadoN;
+        this.quantidadeP = quantidadeP;
+        this.ncomprasP = ncomprasP;
+        this.faturadoP = faturadoP;
+        this.clientes = new TreeSet<>();
     }
 
-    //Métodos
-    //Getters e Setters
-
-    public double getFaturado() {return faturado;}
-
-    public int getNcompras() {return ncompras;}
-
-    public int getQuantidade() {return quantidade;}
-    
-    public String getModo() {return modo;}
-
-    public TreeSet<String> getUtilizador() {return utilizador;}
-
-    public void setFaturado(double faturado) {this.faturado = faturado;}
-
-    public void setNcompras(int ncompras) {this.ncompras = ncompras;}
-
-    public void setQuantidade(int quantidade) {this.quantidade = quantidade;}
-    
-    public void setModo(String modo) {this.modo = modo;}
-
-    public void setUtilizador(TreeSet<String> utilizadorN) {this.utilizador = utilizadorN;}
-       
-    
-    public void addUtilizador(String u){
-        this.utilizador.add(u);
+    public int getQuantidadeN() {
+        return this.quantidadeN;
     }
-    
-    //Tostring
 
-    @Override
-    public String toString(){
-        StringBuilder sb = new StringBuilder();
+    public void setQuantidadeN(int quantidadeN) {
+        this.quantidadeN = quantidadeN;
+    }
+
+    public int getNcomprasN() {
+        return this.ncomprasN;
+    }
+
+    public void setNcomprasN(int ncomprasN) {
+        this.ncomprasN = ncomprasN;
+    }
+
+    public double getFaturadoN() {
+        return this.faturadoN;
+    }
+
+    public void setFaturadoN(double faturadoN) {
+        this.faturadoN = faturadoN;
+    }
+
+    public int getQuantidadeP() {
+        return this.quantidadeP;
+    }
+
+    public void setQuantidadeP(int quantidadeP) {
+        this.quantidadeP = quantidadeP;
+    }
+
+    public int getNcomprasP() {
+        return this.ncomprasP;
+    }
+
+    public void setNcomprasP(int ncomprasP) {
+        this.ncomprasP = ncomprasP;
+    }
+
+    public double getFaturadoP() {
+        return this.faturadoP;
+    }
+
+    public void setFaturadoP(double faturadoP) {
+        this.faturadoP = faturadoP;
+    }
+
+    public TreeSet<String> getClientes() {
+        return this.clientes;
+    }
+
+    public void setClientes(TreeSet<String> clientes) {
+        this.clientes = clientes;
+    }
+
+    
         
-        sb.append("Vendas: ");
-        sb.append(this.quantidade).append("\n");
-        sb.append("Compras: ");
-        sb.append(this.ncompras).append("\n");
-        sb.append("Faturado: ");
-        sb.append(this.faturado).append("\n");
-        sb.append("Modo: ");
-        sb.append(this.modo).append("\n");
-        
-        for(String nome : utilizador){
-            sb.append("Utilizador: ");
-            sb.append(nome).append("\n");
-        }
-        
-        return sb.toString();
-    }
-   
-   
-    
-    //Equals
-
-    @Override
-     public boolean equals(Object obj) {
-      if(this == obj) return true; 
-      if((obj == null) || (this.getClass() != obj.getClass())) return false;
-      Contabilidade c = (Contabilidade) obj;
-      return this.quantidade == c.getQuantidade() && this.ncompras == c.getNcompras() && this.faturado == c.getFaturado()
-             && this.utilizador.equals(c.getUtilizador()) && this.modo.equals(c.getModo());
-   }
-
-     
-    //Clone
-    
-    @Override
-     public Contabilidade clone(){
-         return new Contabilidade(this);
-     }
-
 }
+
 
 
 

@@ -5,11 +5,13 @@
  */
 package Classes;
 
+import java.io.Serializable;
+
 /**
  * 19-05-2014
  * @author barbosa
  */
-public class Compra {
+public class Compra implements Serializable {
     private double preco;
     private String modo;
     private int quantidade;
